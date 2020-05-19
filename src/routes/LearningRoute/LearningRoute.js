@@ -13,7 +13,7 @@ class LearningRoute extends Component {
       currWord: '',
       correctAnswer: null,
       guessedCorrectly: null,
-      guessGiven: null,
+      guessGiven: '',
       lastWord: null,
       lastCorrect: null,
       wordCorrectCount: 0,
@@ -42,7 +42,7 @@ class LearningRoute extends Component {
   }
 
   componentDidMount = async () => {
-    this.updateStateFromHead()
+    await this.updateStateFromHead()
   }
   
   generateForm = () => {
@@ -97,15 +97,15 @@ class LearningRoute extends Component {
     const guessedCorrectly = guessGiven === this.state.correctAnswer ? true : false
     const lastCorrect = this.state.correctAnswer
     const lastWord = this.state.currWord
-    await LanguageService.postGuess(guessGiven)
+    const updatedGuess = await LanguageService.postGuess(guessGiven)
     this.setState({
       guessGiven,
       guessedCorrectly,
       lastCorrect,
       lastWord,
-      wordCorrectCount: guessedCorrectly ? this.state.wordCorrectCount++ : this.state.wordCorrectCount,
-      wordIncorrectCount: guessedCorrectly ? this.state.wordIncorrectCount : this.state.wordIncorrectCount++,
-      totalScore:  guessedCorrectly ? this.state.totalScore++ : this.state.totalScore--
+      wordCorrectCount: updatedGuess.wordCorrectCount,
+      wordIncorrectCount: updatedGuess.wordIncorrectCount,
+      totalScore:  updatedGuess.totalScore
     })
   }
   
